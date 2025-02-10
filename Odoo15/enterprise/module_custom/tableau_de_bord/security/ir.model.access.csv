@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hamac_campagne,access_hamac_campagne,model_hamac_campagne,base.group_user,1,1,1,1
+access_hamac_support,access_hamac_support,model_hamac_support,base.group_user,1,1,1,1
+access_hamac_controle,access_hamac_controle,model_hamac_controle,base.group_user,1,1,1,1
+access_hamac_bus,access_hamac_bus,model_hamac_bus,base.group_user,1,1,1,1
+access_hamac_controle_statistiques,access_hamac_controle_statistiques,model_hamac_controle,base.group_user,1,0,0,0
+access_hamac_probleme,Access to Problèmes,model_hamac_probleme,base.group_user,1,1,1,1
+access_hamac_solution,Access to Solutions,model_hamac_solution,base.group_user,1,1,1,1
+access_hamac_controle_photo,access_hamac_controle_photo,model_hamac_controle_photo,base.group_user,1,1,1,1
+
+

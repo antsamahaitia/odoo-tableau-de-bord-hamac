@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Vue de recherche -->
+    <record id="view_controle_search" model="ir.ui.view">
+        <field name="name">hamac.controle.search</field>
+        <field name="model">hamac.controle</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="campagne_id"/>
+                <field name="support_id"/>
+                <filter string="Aujourd'hui" name="today" domain="[('date_controle', '=', context_today())]"/>
+                <filter string="Cette Semaine" name="week" domain="[('date_controle', '>=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Ce Mois" name="month" domain="[('date_controle', '>=', (context_today().replace(day=1)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter string="État Mauvais" name="mauvais_etat" domain="[('etat_support', '=', 'mauvais')]"/>
+                <filter string="État Mauvais" name="bon_etat" domain="[('etat_support', '=', 'bon')]"/>
+                <group expand="0" string="Regrouper Par">
+                    <filter string="Campagne" name="campagne" context="{'group_by': 'campagne_id'}"/>
+                    <filter string="Support" name="support" context="{'group_by': 'support_id'}"/>
+                    <filter string="Date" name="date" context="{'group_by': 'date_controle:month'}"/>
+
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Vue Liste -->
+
+<record id="view_controle_tree" model="ir.ui.view">
+    <field name="name">hamac.controle.tree</field>
+    <field name="model">hamac.controle</field>
+    <field name="arch" type="xml">
+        <tree decoration-warning="etat_support == 'moyen' or etat_affiches == 'moyen'"
+              decoration-danger="etat_support == 'mauvais' or etat_affiches == 'mauvais'">
+            <field name="name"/>
+            <field name="campagne_id"/>
+            <field name="support_id"/>
+            <field name="date_controle"/>
+            <field name="etat_support"/>
+            <field name="etat_affiches"/>
+            <field name="photo_ids"/>
+        </tree>
+    </field>
+</record>
+
+    <record id="seq_hamac_controle" model="ir.sequence">
+        <field name="name">Séquence Contrôle Qualité</field>
+        <field name="code">hamac.controle</field>
+        <field name="prefix">CTRL</field>  <!-- Préfixe de la référence -->
+        <field name="padding">4</field>   <!-- Nombre de chiffres après le préfixe -->
+        <field name="number_next">1</field>  <!-- Réinitialise la séquence -->
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="view_controle_form" model="ir.ui.view">
+    <field name="name">hamac.controle.form</field>
+    <field name="model">hamac.controle</field>
+    <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <field name="name"/>
+                    <field name="campagne_id"/>
+                    <field name="support_id"/>
+                    <field name="date_controle"/>
+                    <field name="type_controle"/>
+                    <field name="etat_support"/>
+                    <field name="etat_affiches"/>
+
+                    <field name="notes"/>
+                </group>
+                <!-- Photos section -->
+                <notebook>
+                    <page string="Photos">
+                        <field name="photo_ids">
+                            <tree editable="bottom">
+                                <field name="photo" widget="image"/>
+                                <field name="name"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+                <!-- Support problems section -->
+                <group attrs="{'invisible': [('etat_support', '=', 'bon')]}">
+                    <field name="probleme_support_id" placeholder="Sélectionner ou créer un problème"/>
+                    <field name="solution_support_id" domain="[('probleme_id', '=', probleme_support_id)]"
+                           placeholder="Sélectionner ou créer une solution"/>
+                </group>
+                <!-- Poster problems section -->
+                <group attrs="{'invisible': [('etat_affiches', '=', 'bon')]}">
+                    <field name="probleme_affiches_id" placeholder="Sélectionner ou créer un problème"/>
+                    <field name="solution_affiches_id" domain="[('probleme_id', '=', probleme_affiches_id)]"
+                           placeholder="Sélectionner ou créer une solution"/>
+                </group>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+
+
+
+    <!-- Actions -->
+
+    <record id="action_dashboard" model="ir.actions.act_window">
+    <field name="name">Tableau de Bord</field>
+    <field name="res_model">hamac.controle</field>
+    <field name="view_mode">dashboard,graph,pivot</field>
+
+</record>
+
+
+    <record id="action_bus_dashboard" model="ir.actions.act_window">
+    <field name="name">Statistiques Bus</field>
+    <field name="res_model">hamac.bus</field>
+    <field name="view_mode">graph</field>
+</record>
+
+    <record id="action_controle_qualite" model="ir.actions.act_window">
+        <field name="name">Contrôles Qualité</field>
+        <field name="res_model">hamac.controle</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_controle_bus" model="ir.actions.act_window">
+        <field name="name">Contrôles Bus</field>
+        <field name="res_model">hamac.bus</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menus -->
+    <menuitem id="menu_hamac_root" name="Tableau de Bord - Qualité"/>
+    <menuitem id="menu_dashboard" name="Tableau de bord" parent="menu_hamac_root" />
+    <menuitem id="menu_abribus_stat" name="Satistiques Abribus" parent="menu_dashboard" action="action_dashboard"/>
+    <menuitem id="menu_bus_stats" name="Statistiques Bus" parent="menu_dashboard" action="action_bus_dashboard"/>
+
+    <menuitem id="menu_qualite" name="Visibilité fixe" parent="menu_hamac_root"/>
+    <menuitem id="menu_controle_abribus" name="Contrôles Abribus" parent="menu_qualite" action="action_controle_qualite"/>
+
+    <menuitem id="menu_bus_root" name="Visibilité mobile" parent="menu_hamac_root"/>
+    <menuitem id="menu_bus" name="Contrôles Bus" parent="menu_bus_root" action="action_controle_bus"/>
+
+</odoo>

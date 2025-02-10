@@ -1,0 +1,17 @@
+
+.oe_form_view {
+    background-color: #f9f9f9;
+}
+
+.oe_tree_view {
+    border: 1px solid #ddd;
+}
+
+.oe_button {
+    background-color: #007bff;
+    color: white;
+}
+
+.oe_button:hover {
+    background-color: #0056b3;
+}

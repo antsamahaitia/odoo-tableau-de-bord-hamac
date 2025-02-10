@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Histogramme de l'évolution de l'état des supports -->
+
+    <record id="view_etat_support_evolution" model="ir.ui.view">
+    <field name="name">hamac.controle.evolution</field>
+    <field name="model">hamac.controle</field>
+    <field name="arch" type="xml">
+        <graph string="Évolution des États des Supports">
+            <field name="date_controle"/>
+            <field name="etat_support"/>
+        </graph>
+    </field>
+</record>
+
+    <!-- New graph view for bus count per month -->
+    <record id="view_bus_count_per_month" model="ir.ui.view">
+        <field name="name">hamac.bus.count.per.month</field>
+        <field name="model">hamac.bus</field>
+        <field name="arch" type="xml">
+            <graph type="bar" string="Bus Count by Month">
+                <field name="date_pose" interval="month" type="row"/>
+                <field name="id" type="measure"/>
+
+            </graph>
+        </field>
+    </record>
+
+    <!-- New graph view for controls count per month -->
+    <record id="view_controles_par_mois" model="ir.ui.view">
+        <field name="name">hamac.controles.par.mois</field>
+        <field name="model">hamac.controle</field>
+        <field name="arch" type="xml">
+            <graph type="bar" string="Contrôles par Mois">
+                <field name="date_controle" interval="month" type="row"/>
+                <field name="id" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+
+
+    </odoo>
